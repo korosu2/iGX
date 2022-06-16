@@ -1,0 +1,742 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>iGX</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style>
+html {
+    zoom:1.2;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+* {
+    color: rgb(255, 255, 255);
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+*:not(input,checkbox,textarea) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+input {
+    background-color: transparent;
+    height: 25px;
+}
+
+button {
+    height: 30px;
+    color: rgb(70, 238, 73);
+    background-color: #575757;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 6px;
+    margin: 2px;
+}
+
+button:active {
+    background-color: #575757;
+    transform: translateY(2px);
+}
+
+input[type=radio] {
+    width:16px;
+    height:16px;
+    margin-right:6px;
+    border:none;
+    outline-style:none;
+    -webkit-appearance:none;
+    vertical-align:middle;
+    border:1px solid #686868F0;
+    border-radius:50%;
+    margin:6px 4px;
+}
+
+input[type=radio]:checked {
+    border:5px solid #2F7DCDF0;
+    background:#E8E8E8;
+}
+
+input[type=checkbox] {
+    visibility: hidden;
+    vertical-align:middle; margin-bottom:2px;
+    cursor: pointer;
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+input[type=checkbox]::after {
+    position: absolute;
+    top: 0;
+    margin-top:2px;
+    width: 14px; height: 14px;
+    border: 1px solid #686868;
+    border-radius: 3px;
+    background-color: rgba(0,0,0,0);
+    display: inline-block;
+    visibility: visible;
+    text-align: center;
+    content: ' ';
+}
+
+input[type=checkbox]:checked::after {
+    content: "✓";
+    color: #FFF;
+    border-color: #B8B8B8;
+    background-color: #4498F7;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    height: 15px;
+    cursor: pointer;
+    animation: 0.2s;
+    background: #68686830;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    border: 1px solid #000000;
+    height: 18px;
+    width: 16px;
+    border-radius: 3px;
+    background: #EEEEEEE0;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -2px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #367ebd;
+}
+
+.menubox {
+    display: inline;
+    padding: 5px;
+    width: 300px;
+    height: 20px;
+    line-height: 20px;
+    text-align:center;
+    background-color: #E8E8E890;
+    border-radius: 5px;
+}
+
+.menubox.current {
+    color: #E8E8E8;
+    background-color: #848484;
+}
+
+.menuview {
+    display:none;
+}
+
+.menuview.current {
+    display:block;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.scrollbar {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #B8B8B8;
+}
+
+.popup_container {
+    position:absolute;
+    z-index: 1000;
+    left:50%;
+    top:0;
+}
+
+#popup_search_edit {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:200px;
+    height:150px;
+    position:absolute;
+    left:-100px; top:50px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#popup_progress {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:200px;
+    height:20px;
+    position:absolute;
+    left:-100px; top:100px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 2000;
+}
+    
+#popup_loadscripts {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:250px;
+    height:220px;
+    position:absolute;
+    left:-125px; top:20px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#popup_proclist {
+    display:none;
+    text-align: center;
+    background-color: #FDFDFD;
+    width:180px;
+    max-height:200px;
+    position:absolute;
+    left:-90px; top:50px;
+    border:1px solid #B8B8B880;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#popup_proclist button {
+    display: block;
+    width: 100%;
+    height: 26px;
+    border-radius: 2px;
+    font-weight:bold;
+    color: black;
+    text-align: left;
+    background-color: #00000005;
+}
+
+table.datatype {
+    border: 1px solid red;
+    border-radius: 2px;
+    border-collapse: collapse;
+    border-style:hidden;
+    box-shadow: 0 0 0 1px #3393EF;
+}
+
+.datatype td {
+    cursor: hand;
+    padding: 5px;
+    color: #3393EF;
+    border: 1px solid #3393EF;
+    width: 22px;
+    height: 15px;
+    text-align: center;
+}
+
+.datatype td.selected {
+    color: white;
+    background-color: #3393EF;
+}
+
+.maskview {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    filter: alpha(opacity=60);
+    background-color: #777;
+    z-index: 1;
+    opacity:0.5;
+}
+
+#listdiv {
+    display:block;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    height:100%;
+}
+
+#resultList tr.hilight td{
+    color: #3393EF;
+}
+
+#resultList td {
+    border-bottom:solid 1px #D1D1D1;
+}
+
+#resultList td font {
+    font-size:12px;color:#848484
+}
+</style>
+
+<script>
+var h5gg_jquery_stub;
+if(typeof $ == 'undefined')
+    document.write("<script src=\"https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js\"><\/script>");
+if(typeof $ == 'undefined')
+    alert("NETWORK ERROR");
+
+function h5ggType(type) {
+    if($("input:radio[name=numtype]:checked").val()=="unsigned") {
+        switch(type) {
+            case "I8":
+                return "U8";
+            case "I16":
+                return "U16";
+            case "I32":
+                return "U32";
+            case "I64":
+                return "U64";
+        }
+    }
+    return type;
+}
+
+$(document).ready(function() {
+    document.body.onselectstart = document.body.ondrag =function(){
+        return false;
+    }
+
+    $("input").blur(function() {
+        window.scroll(0,0);
+    });
+
+    document.body.addEventListener('touchstart', function () {});
+
+    $("div.menubox").unbind('click').click(function() {
+        $("div.menubox").removeClass("current");
+        $("div.menuview").removeClass("current");
+        $(this).addClass("current");
+        var menuid = $(this).attr("menu");
+        $("div#"+menuid).addClass("current");
+    });
+
+    $("#datavalue").focus(function() {
+        var input = $(this);
+        input.attr("type","number");
+        setTimeout(function() {input.attr("type","text");}, 500);
+    });
+
+    $("#crossproc").click(function() {
+        $("#popup_proclist").show();
+        $("#maskview").show();
+    });
+
+    if(typeof h5gg != 'undefined') {
+        onClickClearResults();
+        setWindowDrag(0, 0, 400, 80);
+        setLayoutAction(function(w,h) {
+            var width = 370;
+            var height = 370;
+            if(w<h) {
+                height = 600;
+            }
+            width = Math.min(width, w);
+            height = Math.min(height, h);
+            var x = (w-width)/2;
+            var y = (h-height)/2;
+            setWindowRect(x,y,width,height);
+        });
+
+        if(h5gg.getProcList()) {
+            refreshProcList();
+            $("#procname").text('');
+            $("#crossproc").show();
+            $("#popup_proclist").show();
+            $("#maskview").show();
+            $("#closeMenu").hide();
+            setInterval(function(){
+                if($("#popup_proclist").is(":visible")) {
+                    refreshProcList();
+                }
+                if($("#procname").attr('pid')) {
+                    var procs = h5gg.getProcList();
+                    var alive = false;
+                    for(var i=0; i<procs.length; i++) {
+                        if(procs[i].pid == $("#procname").attr('pid')) {
+                            alive=true;
+                            break;
+                        }
+                    }
+                    if(!alive) {
+                        alert("The target process has ended.");
+                        $("#procname").removeAttr('pid');
+                        $("#procname").text('');
+                    }
+                }
+            }, 1500);
+        } else {
+            $("#crossproc").hide();
+        }
+    }
+
+    $("table#resultList").on('click','tr', function() {
+        $("table#resultList tr").removeClass("hilight");
+        $(this).addClass("hilight");
+        var address = $(this).attr("address");
+        var datatype = $(this).attr("datatype");
+        var datavalue = $(this).attr("datavalue");
+        if(typeof h5gg!='undefined') {
+            datavalue = h5gg.getValue(address, h5ggType(datatype));
+        }
+        showPopView("EDIT", function(type, value) {
+            if(!h5gg.setValue(address, value, h5ggType(type))) {
+                alert("ERROR");
+            }
+            onClickRefreshResults();
+        }, datatype, datavalue);
+    });
+});
+
+function refreshProcList() {
+    $("#proctable button").remove();
+    var procs = h5gg.getProcList();
+    for(var i=0; i<procs.length; i++) {
+        var proc = procs[i];
+        var btn = $("<button>"+proc.name+"</button>");
+        btn.attr("pid", proc.pid);
+        btn.click(function() {
+            if(!h5gg.setTargetProc($(this).attr('pid'))) {
+                alert("Target couldn't be selected");
+                return;
+            }
+            onClickClearResults();
+            $("#procname").attr('pid', $(this).attr('pid'));
+            $("#procname").text($(this).text());
+            $("#popup_proclist").hide();
+            $("#maskview").hide();
+        });
+        $("#proctable").append(btn);
+    }
+}
+
+function refreshLocalSrcipts() {
+    $("table#localjslist tr").remove();
+    var jsfiles = h5gg.getLocalScripts();
+    setTimeout(function() {
+        if(jsfiles.length==0) {
+            $("table#localjslist tbody").append("<tr><td colspan=2>Not found(*.js)or(*.html)files.</td></td>");
+        }
+        $("table#localjslist tbody").append('<tr><td style="border-right-style:none; color:blue">Select from file manager</td><td style="border-left-style:none;width:45px"><button onclick="h5gg.pickScriptFile(onClickLoadScript)">Browse</button></td></tr>');
+        for(var i=0; i<jsfiles.length; i++) {
+            var row = '<tr><td style="border-right-style:none;font-weight:bold;color:green">'+jsfiles[i].name+'</td><td style="border-left-style:none;width:45px"><button onclick="onClickLoadScript(\''+jsfiles[i].path+'\')">Add</button></td></tr>';
+            $("table#localjslist tbody").append(row);
+        }
+    }, 300);
+}
+
+function onShowLoadScript(show) {
+    if(show) {
+        $("#maskview").show();
+        $("#popup_loadscripts").show();
+        if(typeof h5gg!='undefined') refreshLocalSrcipts();
+    } else {
+        $("#maskview").hide();
+        $("#popup_loadscripts").hide();
+    }
+}
+
+function onClickLoadScript(url) {
+    if(!url)return;
+    $("#popup_progress").show();
+    $("#maskview_script").show();
+    if(/^\w+\:/.test(url)==false) url = "file://"+url;
+    url = new URL(url);
+    url.searchParams.append("_", Math.random());
+
+    if(/\.js$/.test(url.pathname)==false) {
+        window.location = url.href;
+        return;
+    }
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+
+    script.onload = function () {
+        $("#popup_progress").hide();
+        $("#maskview_script").hide();
+    };
+
+    script.onerror = function () {
+        alert("ERROR");
+        $("#popup_progress").hide();
+        $("#maskview_script").hide();
+    };
+
+    script.src = url.href;
+    document.body.appendChild(script);
+}
+
+function showPopView(name, action, type, value) {
+    $("#maskview").show();
+    $("#popup_search_edit").show();
+    $("#popup_search_edit").find("B#titleBar").text(name);
+    $("#popup_search_edit").find("button#action").text(name);
+    if(type) {
+        $("table#datatype td").each(function(){
+            if($(this).text()==type)
+                $(this).addClass("selected");
+            else
+                $(this).removeClass("selected");
+        });
+    }
+    if(value) {
+        $("input#datavalue").val(value);
+    }
+    $("input#datavalue").focus();
+
+    $("#popup_search_edit").find("button#action").unbind("click").click(function() {
+        var type = $("table#datatype td.selected").text();
+        var value = $("input#datavalue").val();
+        $("#popup_search_edit").hide();
+        $("#popup_progress").show();
+
+        setTimeout(function() {
+            action(type, value);
+            $("#popup_progress").hide();
+            $("#maskview").hide();
+        }, 200);
+    });
+    
+    $("#popup_search_edit").find("button#cancel").unbind("click").click(function() {
+        $("#maskview").hide();
+        $("#popup_search_edit").hide();
+    });
+
+    $("table#datatype td").unbind("click").click(function() {
+        $("table#datatype td").removeClass("selected");
+        $(this).addClass("selected");
+        $("input#datavalue").focus();
+    });
+}
+
+function onClickClearResults() {
+    $("input#datavalue").val("");
+    $("#results_count").hide();
+    $("table#resultList tr").remove();
+    $("table#resultList").attr("currentCount", 0);
+    if(typeof h5gg != 'undefined') h5gg.clearResults();
+}
+
+function loadResults(from, count) {
+    var maxCount = count;
+    var skipCount = from;
+    var results = h5gg.getResults(maxCount, skipCount);
+    for(var i=0; i<results.length; i++) {
+        if(results[i].type=='F32' || results[i].type=='F64')
+            results[i].value = '('+results[i].value+')';
+        var row = '<tr address="'+results[i].address+'" datatype="'+results[i].type+'" datavalue="'+results[i].value+'"><td>'+(from+i+1)+'. '+results[i].address+'<br/><font>'+results[i].value+'</font></td></tr>';
+        $("table#resultList tbody").append(row);
+    }
+}
+
+function onClickRefreshResults(clean) {
+   $("table#resultList tr").remove();
+   if(clean) {
+       $("#listdiv").get(0).scroll(0,0);
+       $("table#resultList").attr("currentCount", 0);
+   }
+    var count = h5gg.getResultsCount();
+    $("#results_count").text("ResultCount: "+count);
+    $("#results_count").show();
+    var currentCount = Number($("table#resultList").attr("currentCount"));
+    if(isNaN(currentCount) || currentCount==0) {
+        currentCount = 100;
+        $("table#resultList").attr("currentCount", 100);
+    }
+    loadResults(0, currentCount);
+}
+
+function loadMoreResults() {
+    console.log("load more data"+Math.random());
+    var currentCount = Number($("table#resultList").attr("currentCount"));
+    $("table#resultList").attr("currentCount", currentCount+100);
+    loadResults(currentCount, 100);
+}
+
+function showMoreResults(div) {
+    var lh = div.scrollHeight - div.scrollTop;
+    console.log(div.clientHeight+","+div.offsetHeight +" : " +div.scrollTop+","+div.scrollHeight + " : " + lh);
+    if(lh <= div.clientHeight) {
+        console.log("trigger bottom");
+        loadMoreResults();
+    }
+}
+
+function onClickEditAll() {
+    showPopView("BATCH", function(type, value){
+        var count = h5gg.editAll(value, h5ggType(type));
+        onClickRefreshResults();
+        alert("DONE: "+count);
+    });
+}
+
+function onClickSearchNumber() {
+    showPopView("SEARCH", function(type, value) {
+        h5gg.setFloatTolerance($("#float_tolerance").val());
+        var memoryFrom = $("input#range_min").val();
+        var memoryTo = $("input#range_max").val();
+        h5gg.searchNumber(value, h5ggType(type), memoryFrom, memoryTo);
+        onClickRefreshResults(true);
+    });
+}
+
+function onClickSearchNearby() {
+    showPopView("NEARBY", function(type, value){
+        h5gg.setFloatTolerance($("#float_tolerance").val());
+        var nearbyRange = $("input#nearby_range").val();
+        h5gg.searchNearby(value, h5ggType(type), nearbyRange);
+        onClickRefreshResults(true);
+    });
+}
+</script>
+</head>
+
+<body bgcolor="#E8E8E8" style="margin:0;">
+<div id="titleBar" style="background-color:#dfdfdf; padding:5px; margin:0px; height:12px">
+&nbsp;<font style="color:black">ZED-TOOL.iGX</font>
+<span id="crossproc" style="display:none">
+<font style="color:blue">&nbsp;Cross process&nbsp;</font><font id="procname">procname</font>
+</span>
+<div id="closeMenu" style="float:right; font-size:16px; line-height:14px; font-family: Arial, sans-serif;" onclick="setWindowVisible(false)">&nbsp;X&nbsp;</div>
+</div>
+<table id="bodyView" width="100%" style="table-layout:fixed;height: calc(100% - 22px) ;">
+<tr>
+<td style="vertical-align:top;width:130px;border-right:solid 2px #9e9e9e;">
+<div>
+ADDRESS MIN:<input id="range_min" style="width:80px;padding-left:0" value="0x00000000" />
+<br/>
+ADDRESS MAX:<input id="range_max" style="width:80px;padding-left:0"  value="0x300000000" />
+<br/>
+<label><input type=radio name="numtype" value="signed" checked/>SIGNED</label>
+<label><input type=radio name="numtype" value="unsigned"/>UNSIGNED</label>
+<br/>
+<button onclick="onClickSearchNumber()">SEARCH</button>
+<button onclick="onClickSearchNearby()">NEARBY</button>
+<br/>
+<button onclick="onClickClearResults()">CLEAR</button>
+<button onclick="onClickEditAll()">BATCH</button>
+<button onclick="onClickRefreshResults()">RELOAD</button>
+<br/>
+<button onclick="onShowLoadScript(true)">ADD SCRIPT</button>
+<button onclick="h5gg.make()">MAKE DYLIB</button>
+<br/>
+NEARBY RANGE:<input id="nearby_range" style="width:80px"  value="0x100"/>
+<br/>
+FLOAT TOLERANCE:<input id="float_tolerance" style="width:80px" value="0.0"/>
+<br/>
+<p id="results_count" style="display:none">NO RESULT</p>
+</div>
+</td>
+<td style="vertical-align:top;">
+<div id="listdiv" class="scrollbar" ontouchend="showMoreResults(this);">
+<table id="resultList" style="width:100%;cursor:hand;">
+</table>
+</div>
+</td>
+</tr>
+</table>
+<div id="maskview" class="maskview"></div>
+<div class="popup_container">
+<div id="popup_search_edit">
+<B id="titleBar">SEARCH NUMBER</B>
+<br/><br/>
+<center>
+<table id="datatype" class="datatype">
+<tr>
+<td>F32</td><td>F64</td><td>I8</td><td>I16</td><td class="selected">I32</td><td>I64</td>
+</tr>
+</table>
+</center>
+<br/>
+<input type="text" id="datavalue" style="width:100%; border:none" placeholder="number" />
+<hr/><br/>
+<button id="cancel">CANCEL</button>
+&nbsp;&nbsp;&nbsp;
+<button id="action">SEARCH</button>
+</div>
+<div id="popup_loadscripts" class="popup_view3">
+<center>
+<div class="menubox current" menu="localjs" onclick="refreshLocalSrcipts()">LOCAL ⟳</div>
+<div class="menubox" menu="netjs">INTERNET</div>
+<div style="float:right; font-size:16px; font-family: Arial, sans-serif;" onclick="onShowLoadScript(false)">&nbsp;X&nbsp;</div>
+</center>
+<hr/>
+<div id="localjs" class="menuview current scrollbar" style="height:190px">
+<table id="localjslist" style="width:100%;" border="1" cellspacing=0 cellpadding=0>
+<tr><td style="border-right-style:none; color:blue">Choose another location</td><td style="border-left-style:none;width:45px"><button>Browse</button></td></tr>
+<tr><td style="border-right-style:none;">Script1.js</td><td style="border-left-style:none;width:45px"><button>Add</button></td></tr>
+</table>
+</div>
+<div id="netjs" class="menuview">
+<br/><br/>
+<input id="netjsurl" style="width:100%" placeholder="link http/https for js/html file." />
+<br/><br/><br/>
+<hr/>
+<button onclick="onClickLoadScript($('#netjsurl').val())">Add JS script</button>
+<button onclick="if($('#netjsurl').val())window.location=$('#netjsurl').val();">Add H5 file</button>
+</div>
+<div id="maskview_script" class="maskview"></div>
+</div>
+<div id="popup_progress">
+<center>
+    Loading...
+</center>
+</div>
+<div id="popup_proclist">
+<center>
+Choose a target
+<hr/>
+<div id="proctable" class="scrollbar" style="min-height:50px; max-height:170px">
+<button>Process1</button>
+<button>Process2</button>
+<button>Process3</button>
+</div>
+</center>
+</div>
+</div>
+</body>
+</html>
